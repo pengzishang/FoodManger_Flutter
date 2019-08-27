@@ -161,19 +161,28 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
   install_framework "${PODS_ROOT}/../.symlinks/flutter/ios/Flutter.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/local_notifications/local_notifications.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/video_player/video_player.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/image_picker/image_picker.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/path_provider/path_provider.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
   install_framework "${PODS_ROOT}/../.symlinks/flutter/ios/Flutter.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/local_notifications/local_notifications.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/video_player/video_player.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/image_picker/image_picker.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/path_provider/path_provider.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework"
 fi
 if [[ "$CONFIGURATION" == "Profile" ]]; then
+  install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
   install_framework "${PODS_ROOT}/../.symlinks/flutter/ios/Flutter.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/local_notifications/local_notifications.framework"
-  install_framework "${BUILT_PRODUCTS_DIR}/video_player/video_player.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/image_picker/image_picker.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/path_provider/path_provider.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

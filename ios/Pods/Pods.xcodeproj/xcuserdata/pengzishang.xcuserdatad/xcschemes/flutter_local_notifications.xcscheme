@@ -14,9 +14,9 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0E5D118CD5DD8FD8D1415D9EC8BEB58E"
-               BuildableName = "local_notifications.framework"
-               BlueprintName = "local_notifications"
+               BlueprintIdentifier = "F64AA263B9D7877A7D58823DEF7F113B"
+               BuildableName = "flutter_local_notifications.framework"
+               BlueprintName = "flutter_local_notifications"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

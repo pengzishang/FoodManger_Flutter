@@ -10,8 +10,3 @@
 #endif
 #endif
 
-#import "LocalNotificationsPlugin.h"
-
-FOUNDATION_EXPORT double local_notificationsVersionNumber;
-FOUNDATION_EXPORT const unsigned char local_notificationsVersionString[];
-

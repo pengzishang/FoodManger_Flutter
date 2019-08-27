@@ -1,8 +1,10 @@
 package io.flutter.plugins;
 
 import io.flutter.plugin.common.PluginRegistry;
-import com.mythichelm.localnotifications.LocalNotificationsPlugin;
-import io.flutter.plugins.videoplayer.VideoPlayerPlugin;
+import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin;
+import io.flutter.plugins.imagepicker.ImagePickerPlugin;
+import io.flutter.plugins.pathprovider.PathProviderPlugin;
+import com.tekartik.sqflite.SqflitePlugin;
 
 /**
  * Generated file. Do not edit.
@@ -12,8 +14,10 @@ public final class GeneratedPluginRegistrant {
     if (alreadyRegisteredWith(registry)) {
       return;
     }
-    LocalNotificationsPlugin.registerWith(registry.registrarFor("com.mythichelm.localnotifications.LocalNotificationsPlugin"));
-    VideoPlayerPlugin.registerWith(registry.registrarFor("io.flutter.plugins.videoplayer.VideoPlayerPlugin"));
+    FlutterLocalNotificationsPlugin.registerWith(registry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"));
+    ImagePickerPlugin.registerWith(registry.registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"));
+    PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
+    SqflitePlugin.registerWith(registry.registrarFor("com.tekartik.sqflite.SqflitePlugin"));
   }
 
   private static boolean alreadyRegisteredWith(PluginRegistry registry) {

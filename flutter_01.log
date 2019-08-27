@@ -1,0 +1,51 @@
+Flutter crash report; please file at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter run --machine --target lib/main.dart -d 41DB514C-6164-4C6C-A7F5-3746C1BFEB03 --track-widget-creation --start-paused
+
+## exception
+
+SocketException: SocketException: Write failed (OS Error: Broken pipe, errno = 32), port = 0
+
+```
+null```
+
+## flutter doctor
+
+```
+[✓] Flutter (Channel beta, v1.8.3, on Mac OS X 10.14.6 18G87, locale zh-Hans-CN)
+    • Flutter version 1.8.3 at /Users/pengzishang/Desktop/CodingProject/flutter
+    • Framework revision e4ebcdf6f4 (4 weeks ago), 2019-07-27 11:48:24 -0700
+    • Engine revision 38ac5f30a7
+    • Dart version 2.5.0 (build 2.5.0-dev.1.0 0ca1582afd)
+
+[✓] Android toolchain - develop for Android devices (Android SDK version 29.0.0)
+    • Android SDK at /Users/pengzishang/Library/Android/sdk
+    • Android NDK location not configured (optional; useful for native profiling support)
+    • Platform android-29, build-tools 29.0.0
+    • Java binary at: /Applications/Android Studio.app/Contents/jre/jdk/Contents/Home/bin/java
+    • Java version OpenJDK Runtime Environment (build 1.8.0_152-release-1343-b01)
+    • All Android licenses accepted.
+
+[✓] Xcode - develop for iOS and macOS (Xcode 10.3)
+    • Xcode at /Applications/Xcode.app/Contents/Developer
+    • Xcode 10.3, Build version 10G8
+    • CocoaPods version 1.7.1
+
+[✓] Android Studio (version 3.4)
+    • Android Studio at /Applications/Android Studio.app/Contents
+    • Flutter plugin version 37.1.1
+    • Dart plugin version 183.6270
+    • Java version OpenJDK Runtime Environment (build 1.8.0_152-release-1343-b01)
+
+[✓] VS Code (version 1.37.1)
+    • VS Code at /Applications/Visual Studio Code.app/Contents
+    • Flutter extension version 3.3.0
+
+[✓] Connected device (2 available)
+    • 超龄儿童      • 8bd9b230d69075b65e0e523c93b168f6760615f9 • ios • iOS 12.4
+    • iPhone Xʀ • 41DB514C-6164-4C6C-A7F5-3746C1BFEB03     • ios • com.apple.CoreSimulator.SimRuntime.iOS-12-4 (simulator)
+
+• No issues found!
+```

@@ -1,2 +1,4 @@
-local_notifications=/Users/pengzishang/.pub-cache/hosted/pub.flutter-io.cn/local_notifications-0.0.7/
-video_player=/Users/pengzishang/.pub-cache/hosted/pub.flutter-io.cn/video_player-0.10.1+3/
+flutter_local_notifications=/Users/pengzishang/.pub-cache/hosted/pub.flutter-io.cn/flutter_local_notifications-0.8.0/
+image_picker=/Users/pengzishang/.pub-cache/hosted/pub.flutter-io.cn/image_picker-0.6.1+4/
+path_provider=/Users/pengzishang/.pub-cache/hosted/pub.flutter-io.cn/path_provider-1.2.0/
+sqflite=/Users/pengzishang/.pub-cache/hosted/pub.flutter-io.cn/sqflite-1.1.6+3/
