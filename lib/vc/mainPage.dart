@@ -9,6 +9,7 @@ import 'package:foodmanger_flutter/vc/notificationRequest.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:foodmanger_flutter/Tools/PhotoManger.dart';
+import 'package:foodmanger_flutter/DataBase/dataBase.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -19,10 +20,17 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
+  int selectIndex = 0;
+  List<FoodDataModel> models;
+
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 5, initialIndex: 0);
-
+    _tabController = TabController(vsync: this, length: 4, initialIndex: 0);
+    _tabController.addListener(() {
+      setState(() {
+        selectIndex = _tabController.index;
+      });
+    });
     // Future.delayed(Duration(seconds: 1)).then((onValue) {
     //   Navigator.of(context).push(new MaterialPageRoute(
     //     fullscreenDialog: true,
@@ -49,108 +57,86 @@ class _MyHomePageState extends State<MyHomePage>
           controller: _tabController,
           labelPadding: EdgeInsets.only(left: 15),
           tabs: <Widget>[
-            RaisedButton(
-              child: Text("da"),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              onPressed: () {},
+            TabbarItem(
+              "全部记录",
+              selectIndex == 0,
+              onPressed: () {
+                setState(() {
+                  selectIndex = 0;
+                });
+              },
             ),
-            RaisedButton(
-              child: Text("data21scxz12"),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              onPressed: () {},
+            TabbarItem(
+              "最近3天",
+              selectIndex == 1,
+              onPressed: () {
+                setState(() {
+                  selectIndex = 1;
+                });
+              },
             ),
-            RaisedButton(
-              child: Text("data2dsa2112"),
-              onPressed: () {},
+            TabbarItem(
+              "最近1个月",
+              selectIndex == 2,
+              onPressed: () {
+                setState(() {
+                  selectIndex = 2;
+                });
+              },
             ),
-            RaisedButton(
-              child: Text("datasadx2112"),
-              onPressed: () {},
+            TabbarItem(
+              "保质期过半",
+              selectIndex == 3,
+              onPressed: () {
+                setState(() {
+                  selectIndex = 3;
+                });
+              },
             ),
-            TabbarItem("data2zxcxz112", true),
           ],
         ),
       ),
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Container(
-            color: Colors.red,
+          FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return FoodList(snapshot.data);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+            future: DBSharedInstance().getAllData(),
           ),
-          ListView(
-            children: <Widget>[
-              Card(
-                margin: EdgeInsets.all(15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                elevation: 15,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.red,
-                      height: 200,
-                    ),
-                    Container(
-                      height: 10,
-                      child: LinearProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(Colors.deepOrange),
-                        // backgroundColor: Colors.transparent,
-                        value: 0.5,
-                        semanticsLabel: "dddd",
-                        semanticsValue: "ccvv",
-                      ),
-                    ),
-                    ListTile(
-                      title: Text("data"),
-                      subtitle: Text("data1111"),
-                      trailing: Icon(Icons.cached),
-                    )
-                  ],
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                elevation: 15,
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      color: Colors.red,
-                      height: 200,
-                    ),
-                    Container(
-                      height: 10,
-                      child: LinearProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation(Colors.deepOrange),
-                        // backgroundColor: Colors.transparent,
-                        value: 0.5,
-                        semanticsLabel: "dddd",
-                        semanticsValue: "ccvv",
-                      ),
-                    ),
-                    ListTile(
-                      title: Text("data"),
-                      subtitle: Text("data1111"),
-                      trailing: Icon(Icons.cached),
-                    )
-                  ],
-                ),
-              ),
-            ],
+          FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return FoodList(snapshot.data);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+            future: DBSharedInstance().getAllData(),
           ),
-          Container(
-            color: Colors.red,
-          ),
-          Container(
-            color: Colors.red,
-          ),
-          Container(
-            color: Colors.red,
+          FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return FoodList(snapshot.data);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+            future: DBSharedInstance().getAllData(),
+          ),FutureBuilder(
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return FoodList(snapshot.data);
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+            future: DBSharedInstance().getAllData(),
           ),
         ],
       ),
@@ -175,6 +161,7 @@ class _MyHomePageState extends State<MyHomePage>
       PhotoManger().takeImage().then((onValue) {
         Navigator.of(context).pop();
         showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (context) {
               return SimpleDialog(
@@ -194,10 +181,22 @@ class _MyHomePageState extends State<MyHomePage>
       PhotoManger().getImage().then((onValue) {
         Navigator.of(context).pop();
         showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (context) {
               return DurationDialog(onValue);
-            });
+            }).then((onValue) {
+          if (onValue == null) {
+            return;
+          }
+          String errorCode = onValue["errorCode"];
+          FoodDataModel data = onValue["data"];
+          if (errorCode != null) {
+            if (errorCode == "100") {
+              buildShowModalBottomSheet(context);
+            }
+          } else if (data != null) {}
+        });
       });
     }
 
@@ -254,77 +253,105 @@ class DurationDialog extends StatefulWidget {
 }
 
 class _DurationDialogState extends State<DurationDialog> {
-  int duration_day = 1;
-  int duration_month = 1;
+  int duration_day = 14;
+  int duration_month = 8;
   String produceDateLabel = "点击选取生产日期";
+  DateTime produceDate;
   bool knowProduceDate = false;
-  DateTime selectedTime = DateTime.now();
+  DateTime selectedTime;
 
+  bool isVaild = false;
+  String name;
+
+  @override
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
       title: Text("这个还能保质多久呢?"),
       children: <Widget>[
-        Container(
-          child: Image.file(widget.imagefile),
+        Stack(
+          children: <Widget>[
+            Image.file(widget.imagefile),
+            IconButton(
+              icon: Icon(
+                Icons.refresh,
+                color: Colors.white,
+                size: 40,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop({"data": null, "errorCode": "100"});
+              },
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 50, left: 50),
+          child: TextField(
+            decoration: InputDecoration(helperText: "食物名字", hintText: "输入食物名字"),
+            maxLength: 10,
+            onChanged: (value) {
+              name = value;
+              print(value);
+            },
+            style: TextStyle(fontSize: 30),
+            textAlign: TextAlign.center,
+          ),
         ),
         knowProduceDate
             ? Column(
                 children: <Widget>[
-                  SizedBox(
-                    height: 15,
-                  ),
-                  RaisedButton(
-                    elevation: 5,
-                    child: Text(
-                      produceDateLabel,
-                    ),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    onPressed: () {
-                      setState(() {
-                        showDatePicker(
-                                context: context,
-                                firstDate:
-                                    DateTime.now().subtract(Duration(days: 30)),
-                                initialDate: DateTime.now(),
-                                lastDate:
-                                    DateTime.now().add(Duration(days: 10 * 30)))
-                            .then((onValue) {
-                          setState(() {
-                            selectedTime = onValue;
-                            produceDateLabel =
-                                "生产日期:${DateFormat.yMd().format(onValue)}";
-                          });
-                        });
-                      });
-                    },
-                  ),
                   ListTile(
-                    title: Text("保质期大概多久呢?"),
-                    subtitle: Text(DateFormat.yMd().format(
-                        selectedTime.add(Duration(days: duration_month * 30)))+" 食物到期"),
-                    trailing: Text("目前大约${duration_month}月"),
+                    title: Text("外包装标明的保质期是多少呢?"),
+                    subtitle: Text(isVaild
+                        ? DateFormat.yMd().format(selectedTime
+                                .add(Duration(days: duration_month * 30))) +
+                            " 食物到期"
+                        : "请先选择一个食品生产日期"),
+                    trailing: Text("保质期${duration_month}月"),
                   ),
                   Slider(
                     divisions: 24,
-                    label: "大约${duration_month}月",
+                    label: "大约剩${duration_month}个月",
                     onChanged: (double value) {
                       setState(() {
                         duration_month = value.toInt();
-                        print(duration_month);
                       });
                     },
                     value: duration_month.toDouble(),
                     max: 24,
                     min: 1,
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: RaisedButton(
+                      elevation: 5,
+                      child: Text(
+                        produceDateLabel,
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        setState(() {
+                          buildShowDatePicker(context).then((onValue) {
+                            if (onValue != null) {
+                              setState(() {
+                                selectedTime = onValue;
+                                isVaild = true;
+                                produceDateLabel =
+                                    "生产日期:${DateFormat.yMd().format(onValue)}";
+                              });
+                            }
+                          });
+                        });
+                      },
+                    ),
+                  ),
                   Align(
                     heightFactor: 0.3,
                     alignment: Alignment.centerRight,
                     child: FlatButton(
                       child: Text(
-                        "还是直接输入保质期吧!",
+                        "还是直接估计保质期吧!",
                         style: TextStyle(
                             color: Colors.blue,
                             decoration: TextDecoration.underline),
@@ -336,29 +363,66 @@ class _DurationDialogState extends State<DurationDialog> {
                       },
                     ),
                   ),
-                  SizedBox(height: 15,),
-                  Row(mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                    FlatButton(child: Text("确定",style: TextStyle(color: Colors.blue),), onPressed: () {},),
-                    FlatButton(child: Text("取消"), onPressed: () {
-                      Navigator.of(context).pop();
-                    },)
-                  ],),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, right: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        FlatButton(
+                          child: Text(
+                            "确定",
+                            style: TextStyle(
+                                color: isVaild ? Colors.blue : Colors.grey),
+                          ),
+                          onPressed: isVaild
+                              ? () {
+                                  var expireDate = DateTime(
+                                      selectedTime.year,
+                                      selectedTime.month + duration_month,
+                                      selectedTime.day);
+                                  var model = FoodDataModel(DateTime.now().millisecondsSinceEpoch.toDouble(),
+                                      name: name,
+                                      productDate:
+                                          selectedTime.millisecondsSinceEpoch.toDouble(),
+                                      freshTimeDuration: (expireDate
+                                          .difference(selectedTime)
+                                          .inMilliseconds).toDouble());
+                                  DBSharedInstance()
+                                      .insertList(model)
+                                      .then((onValue) {
+                                    Navigator.of(context).pop(
+                                        {"data": model, "errorCode": null});
+                                  });
+                                }
+                              : null,
+                        ),
+                        FlatButton(
+                          color: Colors.grey[100],
+                          child: Text("取消"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               )
             : Column(
                 children: <Widget>[
                   ListTile(
-                    title: Text("还能保存多久呢?"),
+                    title: Text("您估计还能保存多久呢?"),
+                    subtitle: Text(DateFormat.yMd().format(
+                            DateTime.now().add(Duration(days: duration_day))) +
+                        " 食物到保质期"),
+                    trailing: Text("大约${duration_day}天"),
                   ),
                   Slider(
                     divisions: 365,
                     label: "大约${duration_day}天",
                     onChanged: (double value) {
-                      // print(value);
                       setState(() {
                         duration_day = value.toInt();
-                        print(duration_day);
                       });
                     },
                     value: duration_day.toDouble(),
@@ -366,7 +430,7 @@ class _DurationDialogState extends State<DurationDialog> {
                     min: 1,
                   ),
                   Align(
-                    heightFactor: 0.3,
+                    heightFactor: 0.4,
                     alignment: Alignment.centerRight,
                     child: FlatButton(
                       child: Text(
@@ -381,30 +445,136 @@ class _DurationDialogState extends State<DurationDialog> {
                         });
                       },
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10, top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        FlatButton(
+                          child: Text(
+                            "确定",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          onPressed: () {
+                            var model = FoodDataModel(DateTime.now().millisecondsSinceEpoch.toDouble(),
+                                name: name,
+                                duration: (duration_day * 24 * 60 * 60 * 1000).toDouble());
+                            DBSharedInstance()
+                                .insertList(model)
+                                .then((onValue) {
+                              print(onValue);
+                              Navigator.of(context)
+                                  .pop({"data": model, "errorCode": null});
+                            });
+                          },
+                        ),
+                        FlatButton(
+                          color: Colors.grey[100],
+                          child: Text("取消"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               )
       ],
     );
+  }
+
+  Future<DateTime> buildShowDatePicker(BuildContext context) {
+    return showDatePicker(
+        context: context,
+        firstDate: DateTime(DateTime.now().year,
+            DateTime.now().month - duration_month, DateTime.now().day),
+        initialDate: DateTime.now(),
+        lastDate: DateTime(
+            DateTime.now().year + 1, DateTime.now().month, DateTime.now().day));
   }
 }
 
 class TabbarItem extends StatelessWidget {
   final String title;
   final bool isSelected;
-  TabbarItem(this.title, this.isSelected);
+  @required
+  VoidCallback onPressed;
+  TabbarItem(this.title, this.isSelected, {this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
-      elevation: 5,
+      elevation: 2,
       child: Text(
         this.title,
-        style: TextStyle(color: isSelected ? Colors.white : Colors.black),
+        style: TextStyle(color: Colors.white),
       ),
-      color: isSelected ? Colors.deepOrange : Colors.grey[100],
+      color: isSelected ? Colors.deepOrange : Colors.grey[400],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      onPressed: () {},
+      onPressed: onPressed,
+    );
+  }
+}
+
+class FoodCard extends StatefulWidget {
+  final FoodDataModel model;
+  FoodCard(this.model);
+
+  @override
+  _FoodCardState createState() => _FoodCardState();
+}
+
+class _FoodCardState extends State<FoodCard> {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 15,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: <Widget>[
+          Container(
+            color: Colors.red,
+            height: 200,
+          ),
+          Container(
+            height: 5,
+            child: LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.deepOrange),
+              // backgroundColor: Colors.transparent,
+              value: 0.5,
+              semanticsLabel: "dddd",
+              semanticsValue: "ccvv",
+            ),
+          ),
+          ListTile(
+            title: Text("data"),
+            subtitle: Text("data1111"),
+            trailing: Icon(Icons.cached),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FoodList extends StatefulWidget {
+  final List<FoodDataModel> list;
+
+  FoodList(this.list);
+
+  @override
+  _FoodListState createState() => _FoodListState();
+}
+
+class _FoodListState extends State<FoodList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      children: widget.list.map((item) => FoodCard(item)).toList(),
     );
   }
 }

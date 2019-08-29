@@ -4,6 +4,8 @@ import 'dart:io';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
 
+typedef bool FilterBlock(Map item);
+
 class DBSharedInstance {
   // 单例公开访问点
   factory DBSharedInstance() => _sharedInstance();
@@ -46,59 +48,132 @@ class DBSharedInstance {
     }
   }
 
-  Future<Database> insertList() async {
+  Future<Database> insertList(FoodDataModel model) async {
     final db = await _dbFile;
-    var nowTime = DateTime.now().millisecondsSinceEpoch.toString();
 
-    // db.transaction((trx) {
-    //   db.insert("FoodDateBase", {
-    //     "duration":duration,
-    //     "initDate":nowTime,
-
-    //   });
-
-    // });
+    db.transaction((trx) {
+      db.insert("FoodDateBase", {
+        "duration": model.duration,
+        "initDate": model.initDate.millisecondsSinceEpoch,
+        "expireDate": model.expireDate.millisecondsSinceEpoch,
+        "name": model.name,
+        "productDate": (model.productDate == null)
+            ? null
+            : model.productDate.millisecondsSinceEpoch
+      });
+    });
 
     return db;
   }
+
+  Future<List<FoodDataModel>> getAllData() async {
+    final db = await _dbFile;
+    List list = await db.query("FoodDateBase", orderBy: "expireDate", columns: [
+      "foodId",
+      "expireDate",
+      "initDate",
+      "name",
+      "position",
+      "duration",
+      "productDate"
+    ]);
+    return list.map((item) {
+      return FoodDataModel(item["initDate"],
+          foodId: item["foodId"],
+          expireDate: item["expireDate"],
+          name: item["name"],
+          position: item["position"],
+          duration: item["duration"],
+          productDate: item["productDate"]);
+    }).toList();
+  }
+
+  Future<List<FoodDataModel>> getData(int from, int to) async {
+    return this.filter((item) {
+      if (item["expireDate"] > from && item["expireDate"] < to) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  Future<List<FoodDataModel>> getHalfData() async {
+    return this.filter((item) {
+      if (item["expireDate"] - item["initDate"] < item["duration"] / 2) {
+        return true;
+      }
+      return false;
+    });
+  }
+
+  Future<List<FoodDataModel>> filter(FilterBlock by) async {
+    final db = await _dbFile;
+    List list = await db.query("FoodDateBase", orderBy: "expireDate", columns: [
+      "foodId",
+      "expireDate",
+      "initDate",
+      "name",
+      "position",
+      "duration",
+      "productDate"
+    ]);
+
+    List filter = list.where(by);
+    return filter.map((item) {
+      return FoodDataModel(item["initDate"],
+          foodId: item["foodId"],
+          expireDate: item["expireDate"],
+          name: item["name"],
+          position: item["position"],
+          duration: item["duration"],
+          productDate: item["productDate"]);
+    }).toList();
+  }
+
+  //最近三天 //全部 //一个月内 //过了一半保质期
 }
 
-class FoodDateModel {
+class FoodDataModel {
   int foodId;
   DateTime expireDate;
   DateTime initDate;
   DateTime productDate;
   String name;
   String position;
-  int duration;
-  int freshTimeDuration;
+  double duration; //剩余保质期
+  double freshTimeDuration; //标明保质期
   bool isValid;
 
-  FoodDateModel(int initDate,
+  FoodDataModel(double initDate,
       {this.position,
       this.foodId,
       this.name,
-      int expireDate,
-      int productDate,
+      double expireDate,
+      double productDate,
       this.duration,
       this.freshTimeDuration})
       : assert(duration > 0) {
-    this.initDate = DateTime.fromMillisecondsSinceEpoch(initDate);
     //三种方式
     //duration
     //expireDate
     //productDate,freshTimeDuration
+    this.initDate = DateTime.fromMillisecondsSinceEpoch(initDate.toInt());
 
+    if (name == null) {
+      this.name = "食物";
+    }
     if (duration == null) {
       if (expireDate != null) {
         //expireDate
-        this.duration = expireDate - initDate;
+        this.duration = expireDate - this.initDate.millisecondsSinceEpoch;
         isValid = true;
       } else {
         if (productDate != null && freshTimeDuration != null) {
-          this.duration = productDate + freshTimeDuration - initDate;
-          this.expireDate =
-              DateTime.fromMillisecondsSinceEpoch(initDate + this.duration);
+          this.duration = productDate +
+              freshTimeDuration -
+              this.initDate.millisecondsSinceEpoch;
+          this.expireDate = DateTime.fromMillisecondsSinceEpoch(
+              (this.initDate.millisecondsSinceEpoch + this.duration).toInt());
           isValid = true;
           //productDate,freshTimeDuration
         } else {
@@ -108,8 +183,8 @@ class FoodDateModel {
       }
     } else {
       this.duration = duration;
-      this.expireDate =
-          DateTime.fromMillisecondsSinceEpoch(initDate + duration);
+      this.expireDate = DateTime.fromMillisecondsSinceEpoch(
+          (this.initDate.millisecondsSinceEpoch + duration).toInt());
       isValid = true;
       //duration
     }
